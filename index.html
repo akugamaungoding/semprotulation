@@ -1061,9 +1061,20 @@
       },
       body: 'image=' + encodeURIComponent(base64Data) + '&fileName=' + encodeURIComponent(fileName)
     })
-      .then(resp => resp.json())
-      .then(data => console.log('Upload result:', data))
-      .catch(err => console.log('GDrive upload error:', err));
+      .then(resp => {
+        if (!resp.ok) {
+          throw new Error('HTTP ' + resp.status);
+        }
+        return resp.json();
+      })
+      .then(data => {
+        console.log('Upload result:', data);
+        alert('Upload berhasil! ' + (data.fileName || ''));
+      })
+      .catch(err => {
+        console.log('GDrive upload error:', err);
+        alert('Upload gagal: ' + err.message);
+      });
 
     // Download biasa
     const a = document.createElement('a');
