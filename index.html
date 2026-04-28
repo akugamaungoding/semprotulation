@@ -1056,12 +1056,14 @@
 
     fetch(gdriveURL, {
       method: 'POST',
-      mode: 'no-cors',
-      body: new URLSearchParams({
-        image: base64Data,
-        fileName: fileName
-      })
-    }).catch(err => console.log('GDrive upload error:', err));
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'image=' + encodeURIComponent(base64Data) + '&fileName=' + encodeURIComponent(fileName)
+    })
+      .then(resp => resp.json())
+      .then(data => console.log('Upload result:', data))
+      .catch(err => console.log('GDrive upload error:', err));
 
     // Download biasa
     const a = document.createElement('a');
